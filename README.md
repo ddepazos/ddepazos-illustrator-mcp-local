@@ -5,65 +5,47 @@ Suite experimental de herramientas **locales y offline** para Adobe Illustrator 
 ## Paneles CEP incluidos
 
 ### Vector 3D Local
-
-- lectura de vectores seleccionados;
+- lectura de vectores;
 - modos 2D / 2.5D / 3D;
-- extrude;
-- bevel aproximado;
-- rotación X/Y/Z;
-- twist;
-- bend;
-- inflate;
-- taper;
-- perspectiva;
-- wireframe;
-- aplicación del resultado como paths y caras vectoriales editables.
-
-Carpeta: `cep-plugin/`
+- extrude, bevel aproximado, X/Y/Z, twist, bend, inflate, taper;
+- salida como paths y caras vectoriales editables.
 
 ### Pazos Halftone Pro
-
-- convierte imágenes locales en puntos vectoriales;
-- densidad;
-- tamaño máximo;
-- contraste;
-- umbral;
-- rotación de trama;
-- círculo, cuadrado o rombo;
-- invertir y eliminar blancos.
-
-Carpeta: `halftone-pro/`
+- imagen local a puntos vectoriales;
+- densidad, tamaño, contraste, umbral y rotación de trama;
+- círculo, cuadrado o rombo.
 
 ### Pazos Tattoo Stencil
-
-- extracción de líneas mediante Sobel;
+- extracción de líneas con Sobel;
 - líneas + puntillismo;
-- puntillismo tonal;
-- contraste;
-- sensibilidad de borde;
-- grosor y longitud de línea;
-- umbral de sombras;
-- puntos vectoriales editables.
-
-Carpeta: `tattoo-stencil/`
+- puntillismo tonal editable.
 
 ### Pazos Organic Shape Lab
-
-- blobs y formas Bézier orgánicas;
+- blobs y formas Bézier;
 - seed reproducible;
-- lóbulos;
-- irregularidad;
-- ruido radial;
-- inflate/contract;
-- simetría bilateral y radial;
-- variaciones;
-- reinterpretación procedural de un path seleccionado.
+- lóbulos, ruido, simetría, variaciones;
+- deformación procedural de un path seleccionado.
 
-Carpeta: `organic-shape-lab/`
+### Pazos Pattern Lab
+- patrones radial, grid, espiral y onda;
+- máximo 120 copias finales;
+- preview limitado a 80 siluetas simples;
+- rotación, escala progresiva, separación, amplitud y frecuencia;
+- cálculo solo al modificar controles, sin render continuo.
 
-## Instalar todos los paneles en Windows
+## Filosofía de rendimiento
 
-En PowerShell:
+La suite prioriza un PC con recursos limitados:
+
+- previews simplificados;
+- límites explícitos de copias/puntos;
+- sin render loops innecesarios;
+- procesamiento real solo cuando el usuario pulsa Aplicar/Crear;
+- código empaquetado en GitHub Actions, no en el PC local.
+
+Para trabajos que involucren imágenes o diseños privados, el procesamiento permanece local.
+
+## Instalar todos los paneles
 
 ```powershell
 cd C:\Users\nicol\Documents\ddepazos-illustrator-mcp-local
@@ -71,59 +53,55 @@ git pull
 powershell.exe -ExecutionPolicy Bypass -File .\install-all-panels.ps1
 ```
 
-Después cierra Illustrator 2023 por completo y vuelve a abrirlo.
-
-Busca los paneles en:
+Luego reinicia Illustrator 2023 y abre:
 
 ```text
 Ventana → Extensiones (heredadas)
 ```
 
-No se requieren permisos de administrador porque los paneles se instalan en:
+Los paneles se instalan en:
 
 ```text
 %APPDATA%\Adobe\CEP\extensions
 ```
 
-## Privacidad / modo local
+No requieren permisos de administrador.
 
-Los paneles usan HTML/CSS/JavaScript + ExtendScript y declaran una CSP con:
+## GitHub Actions
+
+El workflow:
+
+```text
+.github/workflows/package-suite.yml
+```
+
+crea automáticamente ZIPs de cada panel y un paquete completo de la suite cuando cambia `main`.
+
+Esto permite que GitHub haga el trabajo de empaquetado y evita cargar tu PC con tareas innecesarias.
+
+## Privacidad / offline
+
+Los paneles usan HTML/CSS/JavaScript + ExtendScript y bloquean conexiones salientes con CSP:
 
 ```text
 connect-src 'none'
 ```
 
-No usan Firefly, APIs remotas de Adobe ni un servidor HTTP propio.
+No usan Firefly, APIs remotas de Adobe ni servidor HTTP propio.
 
-La aplicación Adobe Illustrator puede realizar sus conexiones normales de licencia o servicios por separado; estos paneles no las necesitan para procesar imágenes o vectores.
+Illustrator puede realizar sus conexiones normales de licencia de forma independiente; las herramientas no necesitan esas conexiones para procesar imágenes o vectores.
 
 ---
 
 # MCP local opcional
 
-El repositorio también incluye un prototipo MCP local para órdenes de alto nivel.
+También existe un servidor MCP local por `stdio`.
 
-## Arquitectura
+Herramientas actuales:
 
-```text
-Host MCP / IA
-      │
-    stdio
-      ▼
-MCP local (Node.js)
-      │
-      ├── latest.svg
-      └── command.json
-              │
-              ▼
-       Illustrator bridge.jsx
-```
-
-## Requisitos MCP
-
-- Node.js 20+;
-- npm;
-- un host compatible con MCP por stdio.
+- `create_organic_shape`
+- `queue_3d_rotation`
+- `preview_3d_matrix`
 
 Instalación:
 
@@ -132,18 +110,11 @@ npm.cmd install
 npm.cmd start
 ```
 
-Herramientas actuales:
-
-- `create_organic_shape`
-- `queue_3d_rotation`
-- `preview_3d_matrix`
-
-El MCP usa stdio y no levanta un servidor HTTP.
-
-## Documentación adicional
+## Documentación
 
 - `CEP_PANEL.md`
 - `HALFTONE_PRO.md`
 - `TATTOO_STENCIL.md`
 - `ORGANIC_SHAPE_LAB.md`
+- `PATTERN_LAB.md`
 - `TEST_ILLUSTRATOR_2023.md`
