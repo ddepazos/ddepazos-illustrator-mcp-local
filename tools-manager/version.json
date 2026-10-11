@@ -1,0 +1,16 @@
+{
+  "suite": "Pazos Vector Tools",
+  "version": "0.8.0",
+  "illustrator": "2023",
+  "updated": "2026-10-11",
+  "modules": [
+    "Vector 3D Local",
+    "Pazos Halftone Pro",
+    "Pazos Tattoo Stencil",
+    "Pazos Organic Shape Lab",
+    "Pazos Pattern Lab",
+    "Pazos Image → Web",
+    "Pazos NFT Publisher",
+    "Pazos Tools Manager"
+  ]
+}
