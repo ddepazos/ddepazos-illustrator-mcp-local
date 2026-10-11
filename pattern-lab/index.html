@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy"
+ content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'none'; object-src 'none';">
+<title>Pazos Pattern Lab</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <div><h1>Pattern Lab</h1><small>LOCAL · LOW RESOURCE</small></div>
+  <button id="reset">Reset</button>
+</header>
+
+<section class="modes">
+  <button class="mode active" data-mode="radial">Radial</button>
+  <button class="mode" data-mode="grid">Grid</button>
+  <button class="mode" data-mode="spiral">Espiral</button>
+  <button class="mode" data-mode="wave">Onda</button>
+</section>
+
+<section class="preview">
+  <canvas id="preview" width="700" height="420"></canvas>
+  <div class="badge" id="perf">Preview ligero</div>
+</section>
+
+<section class="actions">
+  <button id="read">Leer selección</button>
+  <button id="apply" class="primary">Crear patrón</button>
+</section>
+
+<section class="controls">
+  <div class="control"><label>Copias <b id="countV">24</b></label><input id="count" type="range" min="2" max="120" value="24"></div>
+  <div class="control"><label>Radio / distancia <b id="radiusV">140</b></label><input id="radius" type="range" min="20" max="400" value="140"></div>
+  <div class="control"><label>Rotación por copia <b id="rotationStepV">15°</b></label><input id="rotationStep" type="range" min="-90" max="90" value="15"></div>
+  <div class="control"><label>Escala progresiva <b id="scaleStepV">0%</b></label><input id="scaleStep" type="range" min="-8" max="8" step="0.25" value="0"></div>
+  <div class="control"><label>Separación X <b id="gapXV">70</b></label><input id="gapX" type="range" min="10" max="250" value="70"></div>
+  <div class="control"><label>Separación Y <b id="gapYV">70</b></label><input id="gapY" type="range" min="10" max="250" value="70"></div>
+  <div class="control"><label>Amplitud onda <b id="amplitudeV">80</b></label><input id="amplitude" type="range" min="0" max="250" value="80"></div>
+  <div class="control"><label>Frecuencia onda <b id="frequencyV">2.0</b></label><input id="frequency" type="range" min="0.25" max="6" step="0.25" value="2"></div>
+  <div class="row">
+    <label><input id="keepOriginal" type="checkbox" checked> Conservar original</label>
+    <label><input id="rotateToPath" type="checkbox" checked> Orientar copias</label>
+  </div>
+  <div class="note">El preview usa rectángulos simples y nunca renderiza más de 80 copias. Illustrator genera el patrón real solo al pulsar Crear patrón.</div>
+</section>
+
+<footer><span id="status">Selecciona un objeto</span><span class="offline">● SIN RED</span></footer>
+<script src="js/main.js"></script>
+</body>
+</html>
