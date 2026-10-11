@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy"
+ content="default-src 'self' data: file:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'none'; object-src 'none'; frame-src 'none';">
+<title>Pazos NFT Publisher</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <div><h1>NFT Publisher</h1><small>ERC-721 · SEPOLIA · LOW RESOURCE</small></div>
+  <span class="testnet">TESTNET</span>
+</header>
+
+<section class="card">
+  <div class="grid2">
+    <label>Red
+      <select id="network">
+        <option value="11155111">Sepolia · 11155111</option>
+      </select>
+    </label>
+    <label>Formato obra
+      <select id="format">
+        <option value="svg">SVG</option>
+        <option value="png">PNG</option>
+      </select>
+    </label>
+  </div>
+
+  <label>Nombre de la obra<input id="name" value="Obra 001"></label>
+  <label>Descripción<textarea id="description">Obra digital preparada desde Illustrator.</textarea></label>
+  <div class="grid2">
+    <label>Artista<input id="artist" value="Diego Pazos"></label>
+    <label>Edición<input id="edition" value="1/1"></label>
+  </div>
+  <label>External URL opcional<input id="externalUrl" placeholder="https://..."></label>
+  <label>Image URI<input id="imageUri" value="ipfs://YOUR_CID/artwork.svg"></label>
+</section>
+
+<section class="card">
+  <h2>Mint de prueba</h2>
+  <label>Contrato ERC-721<input id="contract" placeholder="0x..."></label>
+  <label>Wallet receptora<input id="recipient" placeholder="0x..."></label>
+  <label>Token URI<input id="tokenUri" value="ipfs://YOUR_CID/metadata.json"></label>
+  <div class="hint">El panel no firma transacciones ni almacena claves. Solo prepara los archivos para firmar desde una wallet externa.</div>
+</section>
+
+<section class="actions">
+  <button id="exportArt">1. Exportar obra</button>
+  <button id="metadata">2. Generar metadata</button>
+  <button id="mintRequest" class="primary">3. Preparar mint</button>
+</section>
+
+<section class="outputs">
+  <label>metadata.json<textarea id="metadataOut" spellcheck="false"></textarea></label>
+  <label>mint-request.json<textarea id="mintOut" spellcheck="false"></textarea></label>
+</section>
+
+<footer><span id="status">Modo seguro · sin claves privadas</span><span class="offline">● PANEL SIN RED</span></footer>
+<script src="js/main.js"></script>
+</body>
+</html>
