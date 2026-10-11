@@ -9,6 +9,7 @@ on:
       - "tattoo-stencil/**"
       - "organic-shape-lab/**"
       - "pattern-lab/**"
+      - "image-to-web/**"
       - "install-*.ps1"
       - ".github/workflows/package-suite.yml"
   workflow_dispatch:
@@ -28,7 +29,8 @@ jobs:
           zip -r dist/tattoo-stencil.zip tattoo-stencil
           zip -r dist/organic-shape-lab.zip organic-shape-lab
           zip -r dist/pattern-lab.zip pattern-lab
-          zip -r dist/pazos-vector-tools-suite.zip             cep-plugin halftone-pro tattoo-stencil organic-shape-lab pattern-lab             install-panel.ps1 install-halftone-pro.ps1 install-tattoo-stencil.ps1             install-organic-shape-lab.ps1 install-pattern-lab.ps1 install-all-panels.ps1
+          zip -r dist/image-to-web.zip image-to-web
+          zip -r dist/pazos-vector-tools-suite.zip             cep-plugin halftone-pro tattoo-stencil organic-shape-lab pattern-lab             install-panel.ps1 install-halftone-pro.ps1 install-tattoo-stencil.ps1             install-organic-shape-lab.ps1 install-pattern-lab.ps1 install-image-to-web.ps1 install-all-panels.ps1
 
       - name: Upload packages
         uses: actions/upload-artifact@v4
