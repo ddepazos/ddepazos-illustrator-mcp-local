@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy"
+ content="default-src 'self' data: blob: file:; img-src 'self' data: blob: file:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'none'; object-src 'none'; frame-src 'none';">
+<title>Pazos Organic Shape Lab</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <div><h1>Organic Shape Lab</h1><small>GENERATIVE · VECTOR · OFFLINE</small></div>
+  <button id="randomSeed">Nueva seed</button>
+</header>
+
+<section class="tabs">
+  <button class="tab active" data-mode="generate">Generar</button>
+  <button class="tab" data-mode="deform">Deformar selección</button>
+</section>
+
+<section class="preview">
+  <canvas id="preview" width="700" height="430"></canvas>
+  <div class="hint">Forma reproducible por seed</div>
+</section>
+
+<section class="actions">
+  <button id="readSelection">Leer selección</button>
+  <button id="apply" class="primary">Aplicar a Illustrator</button>
+</section>
+
+<section class="controls">
+  <div class="control"><label>Seed <b id="seedValue">1984</b></label><input id="seed" type="number" min="0" max="2147483647" value="1984"></div>
+
+  <div class="grid2">
+    <div class="control"><label>Puntos <b id="pointsValue">28</b></label><input id="points" type="range" min="8" max="96" value="28"></div>
+    <div class="control"><label>Lóbulos <b id="lobesValue">7</b></label><input id="lobes" type="range" min="0" max="20" value="7"></div>
+  </div>
+
+  <div class="control"><label>Irregularidad <b id="irregularityValue">22%</b></label><input id="irregularity" type="range" min="0" max="80" value="22"></div>
+  <div class="control"><label>Fuerza de lóbulos <b id="lobeStrengthValue">18%</b></label><input id="lobeStrength" type="range" min="0" max="60" value="18"></div>
+  <div class="control"><label>Suavidad <b id="smoothnessValue">88%</b></label><input id="smoothness" type="range" min="0" max="100" value="88"></div>
+  <div class="control"><label>Ruido radial <b id="noiseValue">16%</b></label><input id="noise" type="range" min="0" max="70" value="16"></div>
+  <div class="control"><label>Inflar / contraer <b id="inflateValue">0%</b></label><input id="inflate" type="range" min="-60" max="100" value="0"></div>
+  <div class="control"><label>Rotación <b id="rotationValue">0°</b></label><input id="rotation" type="range" min="-180" max="180" value="0"></div>
+
+  <div class="grid2">
+    <div class="control">
+      <label>Simetría</label>
+      <select id="symmetry">
+        <option value="none">Libre</option>
+        <option value="bilateral">Bilateral</option>
+        <option value="radial4">Radial 4</option>
+        <option value="radial6">Radial 6</option>
+        <option value="radial8">Radial 8</option>
+      </select>
+    </div>
+    <div class="control">
+      <label>Variaciones</label>
+      <select id="variations">
+        <option value="1">1</option>
+        <option value="3">3</option>
+        <option value="6">6</option>
+        <option value="9">9</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row">
+    <label><input id="duplicate" type="checkbox" checked> Conservar original</label>
+    <label><input id="outlineOnly" type="checkbox"> Solo contorno</label>
+  </div>
+
+  <div class="note">
+    Generar crea nuevas formas Bézier. Deformar selección conserva la estructura general del path y desplaza anclas de forma procedural.
+  </div>
+</section>
+
+<footer><span id="status">Motor listo</span><span class="offline">● SIN RED</span></footer>
+<script src="js/main.js"></script>
+</body>
+</html>
