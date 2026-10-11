@@ -26,6 +26,17 @@ Suite experimental de herramientas **locales y offline** para Adobe Illustrator 
 - lóbulos, ruido, simetría, variaciones;
 - deformación procedural de un path seleccionado.
 
+
+### Pazos Image → Web
+- carga una captura de interfaz local;
+- análisis reducido para bajo consumo;
+- detección aproximada de secciones y columnas;
+- extracción de colores;
+- HTML semántico básico;
+- CSS responsive;
+- editor de código dentro del panel;
+- exportación de `index.html` + `styles.css`.
+
 ### Pazos Pattern Lab
 - patrones radial, grid, espiral y onda;
 - máximo 120 copias finales;
@@ -42,6 +53,7 @@ La suite prioriza un PC con recursos limitados:
 - sin render loops innecesarios;
 - procesamiento real solo cuando el usuario pulsa Aplicar/Crear;
 - código empaquetado en GitHub Actions, no en el PC local.
+- Image → Web limita el análisis de capturas a una resolución reducida para ahorrar CPU/RAM.
 
 Para trabajos que involucren imágenes o diseños privados, el procesamiento permanece local.
 
@@ -117,4 +129,5 @@ npm.cmd start
 - `TATTOO_STENCIL.md`
 - `ORGANIC_SHAPE_LAB.md`
 - `PATTERN_LAB.md`
+- `IMAGE_TO_WEB.md`
 - `TEST_ILLUSTRATOR_2023.md`
