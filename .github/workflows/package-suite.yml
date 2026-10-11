@@ -12,6 +12,8 @@ on:
       - "image-to-web/**"
       - "nft-publisher/**"
       - "nft-contract/**"
+      - "tools-manager/**"
+      - "suite-version.json"
       - "install-*.ps1"
       - ".github/workflows/package-suite.yml"
   workflow_dispatch:
@@ -33,11 +35,12 @@ jobs:
           zip -r dist/pattern-lab.zip pattern-lab
           zip -r dist/image-to-web.zip image-to-web
           zip -r dist/nft-publisher.zip nft-publisher NFT_PUBLISHER.md nft-contract
+          zip -r dist/tools-manager.zip tools-manager TOOLS_MANAGER.md suite-version.json
           zip -r dist/pazos-vector-tools-suite.zip \
-            cep-plugin halftone-pro tattoo-stencil organic-shape-lab pattern-lab image-to-web nft-publisher nft-contract \
+            cep-plugin halftone-pro tattoo-stencil organic-shape-lab pattern-lab image-to-web nft-publisher nft-contract tools-manager \
             install-panel.ps1 install-halftone-pro.ps1 install-tattoo-stencil.ps1 install-organic-shape-lab.ps1 \
-            install-pattern-lab.ps1 install-image-to-web.ps1 install-nft-publisher.ps1 install-all-panels.ps1 \
-            CEP_PANEL.md HALFTONE_PRO.md TATTOO_STENCIL.md ORGANIC_SHAPE_LAB.md PATTERN_LAB.md IMAGE_TO_WEB.md NFT_PUBLISHER.md README.md
+            install-pattern-lab.ps1 install-image-to-web.ps1 install-nft-publisher.ps1 install-tools-manager.ps1 install-all-panels.ps1 \
+            CEP_PANEL.md HALFTONE_PRO.md TATTOO_STENCIL.md ORGANIC_SHAPE_LAB.md PATTERN_LAB.md IMAGE_TO_WEB.md NFT_PUBLISHER.md TOOLS_MANAGER.md suite-version.json README.md
 
       - name: Upload packages
         uses: actions/upload-artifact@v4
