@@ -5,7 +5,8 @@ $extensions = @(
   @{ Source = "cep-plugin";        Dest = "com.ddepazos.vector3dlocal";   Name = "Vector 3D Local" },
   @{ Source = "halftone-pro";      Dest = "com.ddepazos.halftonepro";     Name = "Pazos Halftone Pro" },
   @{ Source = "tattoo-stencil";    Dest = "com.ddepazos.tattoostencil";   Name = "Pazos Tattoo Stencil" },
-  @{ Source = "organic-shape-lab"; Dest = "com.ddepazos.organicshapelab"; Name = "Pazos Organic Shape Lab" }
+  @{ Source = "organic-shape-lab"; Dest = "com.ddepazos.organicshapelab"; Name = "Pazos Organic Shape Lab" },
+  @{ Source = "pattern-lab";       Dest = "com.ddepazos.patternlab";       Name = "Pazos Pattern Lab" }
 )
 
 $base = Join-Path $env:APPDATA "Adobe\CEP\extensions"
