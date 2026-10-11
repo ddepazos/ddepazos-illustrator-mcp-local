@@ -5,7 +5,8 @@
   "type": "module",
   "description": "MCP local para generar geometría vectorial procedural y controlarla desde Adobe Illustrator.",
   "scripts": {
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "test:organic": "node test-organic.js"
   },
   "dependencies": {
     "@modelcontextprotocol/server": "^2.0.0",
