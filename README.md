@@ -1,22 +1,107 @@
-# Illustrator MCP Local
+# Pazos Vector Tools / Illustrator MCP Local
 
-Prototipo local para conectar un host MCP con Adobe Illustrator y generar/transformar vectores mediante instrucciones de alto nivel.
+Suite experimental de herramientas **locales y offline** para Adobe Illustrator 2023, junto con un servidor MCP local opcional.
 
-Ejemplos de intención:
+## Paneles CEP incluidos
 
-> Crea una forma orgánica de siete lóbulos, irregular, suave, con semilla 1984.
+### Vector 3D Local
 
-> Duplica el objeto seleccionado y proyéctalo como una rotación X 30°, Y -35°, Z 15°.
+- lectura de vectores seleccionados;
+- modos 2D / 2.5D / 3D;
+- extrude;
+- bevel aproximado;
+- rotación X/Y/Z;
+- twist;
+- bend;
+- inflate;
+- taper;
+- perspectiva;
+- wireframe;
+- aplicación del resultado como paths y caras vectoriales editables.
 
-## Objetivo
+Carpeta: `cep-plugin/`
 
-- Generación procedural de formas 2D orgánicas.
-- Salida SVG editable.
-- Semillas reproducibles.
-- Transformaciones proyectadas X/Y/Z.
-- Puente local hacia Illustrator mediante ExtendScript.
-- Sin servidor HTTP propio.
-- Sin subir el archivo de Illustrator a un servidor.
+### Pazos Halftone Pro
+
+- convierte imágenes locales en puntos vectoriales;
+- densidad;
+- tamaño máximo;
+- contraste;
+- umbral;
+- rotación de trama;
+- círculo, cuadrado o rombo;
+- invertir y eliminar blancos.
+
+Carpeta: `halftone-pro/`
+
+### Pazos Tattoo Stencil
+
+- extracción de líneas mediante Sobel;
+- líneas + puntillismo;
+- puntillismo tonal;
+- contraste;
+- sensibilidad de borde;
+- grosor y longitud de línea;
+- umbral de sombras;
+- puntos vectoriales editables.
+
+Carpeta: `tattoo-stencil/`
+
+### Pazos Organic Shape Lab
+
+- blobs y formas Bézier orgánicas;
+- seed reproducible;
+- lóbulos;
+- irregularidad;
+- ruido radial;
+- inflate/contract;
+- simetría bilateral y radial;
+- variaciones;
+- reinterpretación procedural de un path seleccionado.
+
+Carpeta: `organic-shape-lab/`
+
+## Instalar todos los paneles en Windows
+
+En PowerShell:
+
+```powershell
+cd C:\Users\nicol\Documents\ddepazos-illustrator-mcp-local
+git pull
+powershell.exe -ExecutionPolicy Bypass -File .\install-all-panels.ps1
+```
+
+Después cierra Illustrator 2023 por completo y vuelve a abrirlo.
+
+Busca los paneles en:
+
+```text
+Ventana → Extensiones (heredadas)
+```
+
+No se requieren permisos de administrador porque los paneles se instalan en:
+
+```text
+%APPDATA%\Adobe\CEP\extensions
+```
+
+## Privacidad / modo local
+
+Los paneles usan HTML/CSS/JavaScript + ExtendScript y declaran una CSP con:
+
+```text
+connect-src 'none'
+```
+
+No usan Firefly, APIs remotas de Adobe ni un servidor HTTP propio.
+
+La aplicación Adobe Illustrator puede realizar sus conexiones normales de licencia o servicios por separado; estos paneles no las necesitan para procesar imágenes o vectores.
+
+---
+
+# MCP local opcional
+
+El repositorio también incluye un prototipo MCP local para órdenes de alto nivel.
 
 ## Arquitectura
 
@@ -32,123 +117,33 @@ MCP local (Node.js)
               │
               ▼
        Illustrator bridge.jsx
-              │
-              ▼
-      vectores editables
 ```
 
-## Requisitos
+## Requisitos MCP
 
-- Node.js 20+ recomendado.
-- Adobe Illustrator con soporte para scripts JSX/ExtendScript.
-- Un host compatible con MCP por stdio.
+- Node.js 20+;
+- npm;
+- un host compatible con MCP por stdio.
 
-El proyecto usa la línea v2 del SDK oficial:
+Instalación:
 
-```bash
-npm install @modelcontextprotocol/server zod
+```powershell
+npm.cmd install
+npm.cmd start
 ```
 
-## Instalación
+Herramientas actuales:
 
-```bash
-git clone https://github.com/ddepazos/ddepazos-illustrator-mcp-local.git
-cd ddepazos-illustrator-mcp-local
-npm install
-npm start
-```
+- `create_organic_shape`
+- `queue_3d_rotation`
+- `preview_3d_matrix`
 
-## Configuración MCP
+El MCP usa stdio y no levanta un servidor HTTP.
 
-Usa `mcp-config.example.json` como referencia y cambia la ruta por la ubicación local real del repositorio.
+## Documentación adicional
 
-Ejemplo:
-
-```json
-{
-  "mcpServers": {
-    "illustrator-local": {
-      "command": "node",
-      "args": [
-        "C:/RUTA/ddepazos-illustrator-mcp-local/src/server.js"
-      ]
-    }
-  }
-}
-```
-
-## Carpeta local de intercambio
-
-El MCP crea:
-
-```text
-~/Documents/illustrator-mcp/
-├── latest.svg
-└── command.json
-```
-
-No es un servidor de red. Es un buzón local entre Node.js e Illustrator.
-
-## Herramientas MCP v0.1
-
-### create_organic_shape
-
-Genera un contorno Bézier orgánico reproducible.
-
-Parámetros principales:
-
-- `points`
-- `radius`
-- `irregularity`
-- `lobes`
-- `lobeStrength`
-- `smoothness`
-- `seed`
-- `fill`
-- `stroke`
-- `copies`
-- `rotationStep`
-- `scaleStep`
-
-### queue_3d_rotation
-
-Calcula una proyección de rotación X/Y/Z a una matriz afín 2D y deja una orden para aplicarla al objeto seleccionado en Illustrator.
-
-### preview_3d_matrix
-
-Devuelve la matriz calculada sin escribir una orden.
-
-## Uso en Illustrator
-
-1. Genera una orden con el MCP.
-2. Abre Illustrator.
-3. Si es una transformación, selecciona el objeto.
-4. Ve a **Archivo → Secuencias de comandos → Otra secuencia de comandos…**
-5. Ejecuta `illustrator/bridge.jsx`.
-
-## Privacidad / offline
-
-El servidor MCP usa stdio y el bridge se comunica mediante archivos locales.
-
-El bridge no utiliza:
-
-- `fetch`
-- `XMLHttpRequest`
-- `Socket`
-- HTTP
-- APIs remotas
-
-La instalación inicial de dependencias mediante npm sí puede requerir Internet. Una vez instaladas, el motor puede ejecutarse localmente.
-
-## Próxima etapa
-
-- metaballs;
-- ruido procedural;
-- superformula;
-- espirales;
-- deformación de paths;
-- simetrías radiales;
-- patrones generativos;
-- operaciones booleanas;
-- panel CEP/UXP;
-- ejecución automática sin lanzar manualmente `bridge.jsx`.
+- `CEP_PANEL.md`
+- `HALFTONE_PRO.md`
+- `TATTOO_STENCIL.md`
+- `ORGANIC_SHAPE_LAB.md`
+- `TEST_ILLUSTRATOR_2023.md`
