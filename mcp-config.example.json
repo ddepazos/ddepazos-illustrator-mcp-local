@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "illustrator-local": {
+      "command": "node",
+      "args": [
+        "C:/RUTA/ddepazos-illustrator-mcp-local/src/server.js"
+      ]
+    }
+  }
+}
