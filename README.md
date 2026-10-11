@@ -37,6 +37,17 @@ Suite experimental de herramientas **locales y offline** para Adobe Illustrator 
 - editor de código dentro del panel;
 - exportación de `index.html` + `styles.css`.
 
+
+### Pazos NFT Publisher
+- prepara una obra seleccionada como SVG o PNG;
+- genera `metadata.json` compatible con un flujo ERC-721;
+- genera `mint-request.json` para Sepolia;
+- preset de Sepolia con chain ID `11155111`;
+- valida direcciones `0x...` y URIs `ipfs://`;
+- nunca solicita ni almacena claves privadas o seed phrases;
+- la firma se realiza con una wallet externa;
+- el contrato de ejemplo se compila y valida en GitHub Actions, no en tu PC.
+
 ### Pazos Pattern Lab
 - patrones radial, grid, espiral y onda;
 - máximo 120 copias finales;
@@ -53,6 +64,7 @@ La suite prioriza un PC con recursos limitados:
 - sin render loops innecesarios;
 - procesamiento real solo cuando el usuario pulsa Aplicar/Crear;
 - código empaquetado en GitHub Actions, no en el PC local.
+- el contrato ERC-721 de prueba se compila en GitHub Actions.
 - Image → Web limita el análisis de capturas a una resolución reducida para ahorrar CPU/RAM.
 
 Para trabajos que involucren imágenes o diseños privados, el procesamiento permanece local.
@@ -130,4 +142,5 @@ npm.cmd start
 - `ORGANIC_SHAPE_LAB.md`
 - `PATTERN_LAB.md`
 - `IMAGE_TO_WEB.md`
+- `NFT_PUBLISHER.md`
 - `TEST_ILLUSTRATOR_2023.md`
