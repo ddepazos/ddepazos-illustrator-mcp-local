@@ -48,6 +48,15 @@ Suite experimental de herramientas **locales y offline** para Adobe Illustrator 
 - la firma se realiza con una wallet externa;
 - el contrato de ejemplo se compila y valida en GitHub Actions, no en tu PC.
 
+### Pazos Tools Manager
+- muestra la versión instalada y la versión de GitHub;
+- consulta GitHub solo cuando pulsas un botón;
+- muestra el estado de los últimos Actions;
+- detecta paneles instalados;
+- abre repositorio y Actions;
+- puede ejecutar git pull + instalación desde Illustrator;
+- nunca sube automáticamente tus obras o archivos .ai.
+
 ### Pazos Pattern Lab
 - patrones radial, grid, espiral y onda;
 - máximo 120 copias finales;
@@ -143,4 +152,5 @@ npm.cmd start
 - `PATTERN_LAB.md`
 - `IMAGE_TO_WEB.md`
 - `NFT_PUBLISHER.md`
+- `TOOLS_MANAGER.md`
 - `TEST_ILLUSTRATOR_2023.md`
