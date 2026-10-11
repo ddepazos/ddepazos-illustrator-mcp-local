@@ -6,7 +6,8 @@ $extensions = @(
   @{ Source = "halftone-pro";      Dest = "com.ddepazos.halftonepro";     Name = "Pazos Halftone Pro" },
   @{ Source = "tattoo-stencil";    Dest = "com.ddepazos.tattoostencil";   Name = "Pazos Tattoo Stencil" },
   @{ Source = "organic-shape-lab"; Dest = "com.ddepazos.organicshapelab"; Name = "Pazos Organic Shape Lab" },
-  @{ Source = "pattern-lab";       Dest = "com.ddepazos.patternlab";       Name = "Pazos Pattern Lab" }
+  @{ Source = "pattern-lab";       Dest = "com.ddepazos.patternlab";       Name = "Pazos Pattern Lab" },
+  @{ Source = "image-to-web";       Dest = "com.ddepazos.imagetoweb";       Name = "Pazos Image -> Web" }
 )
 
 $base = Join-Path $env:APPDATA "Adobe\CEP\extensions"
