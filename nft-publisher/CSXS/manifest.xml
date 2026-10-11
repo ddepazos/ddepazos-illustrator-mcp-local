@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ExtensionManifest Version="7.0"
+ ExtensionBundleId="com.ddepazos.nftpublisher"
+ ExtensionBundleVersion="0.1.0">
+  <ExtensionList>
+    <Extension Id="com.ddepazos.nftpublisher.panel" Version="0.1.0"/>
+  </ExtensionList>
+  <ExecutionEnvironment>
+    <HostList><Host Name="ILST" Version="[27.0,28.0)"/></HostList>
+    <LocaleList><Locale Code="All"/></LocaleList>
+    <RequiredRuntimeList><RequiredRuntime Name="CSXS" Version="11.0"/></RequiredRuntimeList>
+  </ExecutionEnvironment>
+  <DispatchInfoList>
+    <Extension Id="com.ddepazos.nftpublisher.panel">
+      <DispatchInfo>
+        <Resources>
+          <MainPath>./index.html</MainPath>
+          <ScriptPath>./jsx/host.jsx</ScriptPath>
+        </Resources>
+        <Lifecycle><AutoVisible>true</AutoVisible></Lifecycle>
+        <UI>
+          <Type>Panel</Type>
+          <Menu>Pazos NFT Publisher</Menu>
+          <Geometry>
+            <Size><Width>460</Width><Height>820</Height></Size>
+            <MinSize><Width>360</Width><Height>600</Height></MinSize>
+            <MaxSize><Width>1000</Width><Height>1200</Height></MaxSize>
+          </Geometry>
+        </UI>
+      </DispatchInfo>
+    </Extension>
+  </DispatchInfoList>
+</ExtensionManifest>
