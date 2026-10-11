@@ -1,0 +1,17 @@
+{
+  "tool": "create_organic_shape",
+  "arguments": {
+    "points": 28,
+    "radius": 180,
+    "irregularity": 0.22,
+    "lobes": 7,
+    "lobeStrength": 0.19,
+    "smoothness": 0.9,
+    "seed": 1984,
+    "fill": "#111111",
+    "stroke": "none",
+    "copies": 1,
+    "rotationStep": 0,
+    "scaleStep": 0
+  }
+}
