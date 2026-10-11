@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy"
+ content="default-src 'self' data: blob: file:; img-src 'self' data: blob: file:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'none'; object-src 'none'; frame-src 'none';">
+<title>Vector 3D Local</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <div><h1>Vector 3D Local</h1><small>Illustrator 2023 · OFFLINE</small></div>
+  <button id="reset">Reset</button>
+</header>
+
+<div class="tabs">
+  <button class="tab active" data-mode="2d">2D</button>
+  <button class="tab" data-mode="25d">2.5D</button>
+  <button class="tab" data-mode="3d">3D</button>
+</div>
+
+<section class="viewport">
+  <canvas id="canvas" width="760" height="460"></canvas>
+  <div class="hint">Arrastra para rotar · rueda para zoom</div>
+</section>
+
+<section class="actions">
+  <button id="readVector" class="primary">Leer vector seleccionado</button>
+  <button id="loadImage">Cargar imagen</button>
+  <button id="apply" class="accent">Aplicar a Illustrator</button>
+</section>
+
+<section class="statusbar">
+  <span id="source">Sin geometría</span>
+  <span class="offline">● SIN RED</span>
+</section>
+
+<section class="controls">
+  <div class="control"><label>Extrude <b id="extrudeV">80</b></label><input id="extrude" type="range" min="0" max="300" value="80"></div>
+  <div class="control"><label>Bevel <b id="bevelV">8</b></label><input id="bevel" type="range" min="0" max="60" value="8"></div>
+
+  <div class="grid2">
+    <div class="control"><label>Rotate X <b id="rxV">20°</b></label><input id="rx" type="range" min="-180" max="180" value="20"></div>
+    <div class="control"><label>Rotate Y <b id="ryV">-30°</b></label><input id="ry" type="range" min="-180" max="180" value="-30"></div>
+  </div>
+  <div class="control"><label>Rotate Z <b id="rzV">0°</b></label><input id="rz" type="range" min="-180" max="180" value="0"></div>
+
+  <div class="control"><label>Twist <b id="twistV">0°</b></label><input id="twist" type="range" min="-180" max="180" value="0"></div>
+  <div class="control"><label>Bend <b id="bendV">0</b></label><input id="bend" type="range" min="-100" max="100" value="0"></div>
+  <div class="control"><label>Inflate <b id="inflateV">0</b></label><input id="inflate" type="range" min="-80" max="120" value="0"></div>
+  <div class="control"><label>Taper <b id="taperV">0</b></label><input id="taper" type="range" min="-100" max="100" value="0"></div>
+  <div class="control"><label>Perspective <b id="perspectiveV">900</b></label><input id="perspective" type="range" min="250" max="2000" value="900"></div>
+  <div class="control"><label>Zoom <b id="zoomV">100%</b></label><input id="zoom" type="range" min="35" max="220" value="100"></div>
+
+  <div class="row">
+    <label><input id="wireframe" type="checkbox"> Wireframe</label>
+    <label><input id="duplicate" type="checkbox" checked> Conservar original</label>
+  </div>
+
+  <div class="note">La malla 3D existe dentro del panel. Al aplicar, Illustrator recibe caras y paths vectoriales proyectados.</div>
+</section>
+
+<script src="js/main.js"></script>
+</body>
+</html>
