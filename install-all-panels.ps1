@@ -9,7 +9,8 @@ $extensions = @(
   @{ Source = "pattern-lab";       Dest = "com.ddepazos.patternlab";       Name = "Pazos Pattern Lab" },
   @{ Source = "image-to-web";       Dest = "com.ddepazos.imagetoweb";       Name = "Pazos Image -> Web" },
   @{ Source = "nft-publisher";      Dest = "com.ddepazos.nftpublisher";      Name = "Pazos NFT Publisher" },
-  @{ Source = "tools-manager";      Dest = "com.ddepazos.toolsmanager";      Name = "Pazos Tools Manager" }
+  @{ Source = "tools-manager";      Dest = "com.ddepazos.toolsmanager";      Name = "Pazos Tools Manager" },
+  @{ Source = "turntable-local";    Dest = "com.ddepazos.turntablelocal";    Name = "Pazos Turntable Local" }
 )
 
 $base = Join-Path $env:APPDATA "Adobe\CEP\extensions"
