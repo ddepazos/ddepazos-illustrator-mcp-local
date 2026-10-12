@@ -57,6 +57,15 @@ Suite experimental de herramientas **locales y offline** para Adobe Illustrator 
 - puede ejecutar git pull + instalación desde Illustrator;
 - nunca sube automáticamente tus obras o archivos .ai.
 
+### Pazos Turntable Local
+- rotación 2.5D de -180° a +180°;
+- tilt de -30° a +30°;
+- auto depth por orden de apilado;
+- inserta una vista o genera 4–16 vistas;
+- prepara un paquete opcional para GitHub Actions;
+- GitHub puede renderizar y empaquetar la secuencia SVG fuera del PC;
+- no sube obras automáticamente y no inventa zonas ocultas como Firefly.
+
 ### Pazos Pattern Lab
 - patrones radial, grid, espiral y onda;
 - máximo 120 copias finales;
@@ -110,7 +119,7 @@ El workflow:
 
 crea automáticamente ZIPs de cada panel y un paquete completo de la suite cuando cambia `main`.
 
-Esto permite que GitHub haga el trabajo de empaquetado y evita cargar tu PC con tareas innecesarias.
+Esto permite que GitHub haga el trabajo de empaquetado y evita cargar tu PC con tareas innecesarias. El workflow `Turntable Render` también puede generar secuencias SVG desde un job que tú subas voluntariamente.
 
 ## Privacidad / offline
 
@@ -153,4 +162,5 @@ npm.cmd start
 - `IMAGE_TO_WEB.md`
 - `NFT_PUBLISHER.md`
 - `TOOLS_MANAGER.md`
+- `TURNTABLE_LOCAL.md`
 - `TEST_ILLUSTRATOR_2023.md`
