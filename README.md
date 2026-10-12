@@ -164,3 +164,10 @@ npm.cmd start
 - `TOOLS_MANAGER.md`
 - `TURNTABLE_LOCAL.md`
 - `TEST_ILLUSTRATOR_2023.md`
+# Pazos AI Turntable · nuevo en suite 0.10.0
+
+**Instalación sin consola:** descarga el paquete desde [GitHub Actions](https://github.com/ddepazos/ddepazos-illustrator-mcp-local/actions/workflows/package-suite.yml), extrae `pazos-vector-tools-suite.zip` y haz doble clic en **Instalar-Pazos-Tools.cmd**. Cierra Illustrator antes de instalar y vuelve a abrirlo al terminar.
+
+En **Ventana → Extensiones (heredadas) → Pazos AI Turntable**, configura la carpeta de Drive y pulsa **Abrir notebook Colab**. Conecta y ejecuta el notebook una vez por sesión. Luego usa **Generar Turntable IA** e **Importar vistas** desde Illustrator.
+
+El adaptador inicial es una prueba del flujo: produce copias PNG rotuladas, no nuevas vistas con IA. [Guía completa de instalación, privacidad y Colab](AI_TURNTABLE.md). Los módulos anteriores se mantienen disponibles.

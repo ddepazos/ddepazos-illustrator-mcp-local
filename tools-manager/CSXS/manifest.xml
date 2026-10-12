@@ -16,7 +16,7 @@
         <Resources>
           <MainPath>./index.html</MainPath>
           <ScriptPath>./jsx/host.jsx</ScriptPath>
-        </Resources>
+        <CEFCommandLine><Parameter>--enable-nodejs</Parameter><Parameter>--mixed-context</Parameter></CEFCommandLine></Resources>
         <Lifecycle><AutoVisible>true</AutoVisible></Lifecycle>
         <UI>
           <Type>Panel</Type>

@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'; connect-src 'none';">
+<title>Pazos AI Turntable</title><link rel="stylesheet" href="css/style.css"></head>
+<body><h1>Pazos AI Turntable</h1><p>v0.1.0 · Illustrator 2023</p>
+<p class="notice">Modo de prueba: devuelve copias rotuladas. No genera vistas nuevas con IA todavía.</p>
+<button id="configure">Configurar carpeta de Drive</button><p id="folder">Sin configurar</p>
+<label>Vistas <input id="views" type="number" min="1" max="36" value="12"></label>
+<label>Tilt <input id="tilt" type="number" min="-90" max="90" value="0"></label>
+<label>Tamaño <select id="size"><option>256</option><option>512</option><option selected>1024</option><option>2048</option></select></label>
+<button id="colab">Abrir notebook Colab</button>
+<p>Inicia/conecta la sesión y ejecuta el notebook manualmente. La cola funciona mientras la sesión permanezca viva.</p>
+<button id="generate">Generar Turntable IA</button>
+<dl><dt>Worker / Colab</dt><dd id="worker">—</dd><dt>GPU</dt><dd id="gpu">—</dd><dt>En cola</dt><dd id="queue">0</dd><dt>Trabajo</dt><dd id="job">—</dd><dt>Estado</dt><dd id="state">—</dd><dt>Progreso</dt><dd id="progress">0/0</dd></dl>
+<label><input id="artboards" type="checkbox">Una mesa de trabajo por vista</label>
+<button id="import" disabled>Importar vistas</button><button id="refresh">Actualizar estado</button>
+<p id="message" role="status">Listo. Obras intercambiadas solo mediante tu Drive.</p>
+<script src="js/main.js"></script></body></html>
