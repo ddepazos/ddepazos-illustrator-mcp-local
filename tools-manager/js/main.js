@@ -34,7 +34,7 @@ function renderLocalState(state){
 function refreshLocal(){
   fetch("version.json",{cache:"no-store"}).then(function(r){return r.json();}).then(function(v){
     localVersion=v.version;$("localVersion").textContent=v.version;updateComparison();
-  }).catch(function(){$("localVersion").textContent="0.8.0";localVersion="0.8.0";});
+  }).catch(function(){$("localVersion").textContent="0.9.0";localVersion="0.9.0";});
   evalAI("getToolsManagerState()",function(r){
     try{renderLocalState(JSON.parse(r));}catch(e){$("modules").textContent="No se pudo comprobar instalación local";}
   });
@@ -56,13 +56,15 @@ function checkGitHub(){
     fetch(API+"/actions/runs?per_page=12",{headers:{"Accept":"application/vnd.github+json"}}).then(function(r){if(!r.ok)throw new Error("actions");return r.json();})
   ]).then(function(data){
     remoteVersion=data[0].version;$("remoteVersion").textContent=remoteVersion;
-    var runs=data[1].workflow_runs||[],suite=null,nft=null;
+    var runs=data[1].workflow_runs||[],suite=null,nft=null,turntable=null;
     for(var i=0;i<runs.length;i++){
       if(!suite&&runs[i].name==="Package Pazos Vector Tools")suite=runs[i];
       if(!nft&&runs[i].name==="Validate NFT Contract")nft=runs[i];
+      if(!turntable&&runs[i].name==="Turntable Render")turntable=runs[i];
     }
     $("buildSuite").textContent=statusText(suite);
     $("buildNFT").textContent=statusText(nft);
+    $("buildTurntable").textContent=statusText(turntable);
     setOnline(true);updateComparison();setStatus("GitHub consultado");
   }).catch(function(){
     setOnline(false);$("remoteVersion").textContent="Sin conexión";setStatus("No se pudo consultar GitHub");
