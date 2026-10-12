@@ -26,7 +26,8 @@ function getToolsManagerState(){
             ["Pattern Lab","com.ddepazos.patternlab"],
             ["Image → Web","com.ddepazos.imagetoweb"],
             ["NFT Publisher","com.ddepazos.nftpublisher"],
-            ["Tools Manager","com.ddepazos.toolsmanager"]
+            ["Tools Manager","com.ddepazos.toolsmanager"],
+            ["Turntable Local","com.ddepazos.turntablelocal"]
         ];
         var mods=[],i;
         for(i=0;i<defs.length;i++){
