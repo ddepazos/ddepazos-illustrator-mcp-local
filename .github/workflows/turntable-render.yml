@@ -1,0 +1,30 @@
+name: Turntable Render
+
+on:
+  workflow_dispatch:
+    inputs:
+      job_path:
+        description: "Ruta del job dentro del repo, ej: turntable-jobs/demo"
+        required: true
+        default: "turntable-jobs/demo"
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Validate job files
+        run: |
+          test -f "${{ inputs.job_path }}/source.svg"
+          test -f "${{ inputs.job_path }}/turntable-job.json"
+      - name: Render SVG sequence
+        run: node turntable-render/render.js "${{ inputs.job_path }}" dist-turntable
+      - name: Package sequence
+        run: zip -r turntable-frames.zip dist-turntable
+      - name: Upload result
+        uses: actions/upload-artifact@v4
+        with:
+          name: turntable-frames
+          path: turntable-frames.zip
+          retention-days: 30
