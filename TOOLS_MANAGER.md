@@ -44,3 +44,6 @@ cd C:\Users\nicol\Documents\ddepazos-illustrator-mcp-local
 git pull
 powershell.exe -ExecutionPolicy Bypass -File .\install-tools-manager.ps1
 ```
+# Estado de AI Turntable (suite 0.10.0)
+
+Tools Manager muestra la versión del módulo, carpeta Drive accesible, worker/Colab, GPU y trabajos en cola. El estado local se refresca cada 10 segundos mientras el panel esté visible. GitHub conserva su consulta manual de versiones y Actions. Para instalar sin consola, extrae el paquete de la suite y abre `Instalar-Pazos-Tools.cmd` con doble clic. Consulta [AI_TURNTABLE.md](AI_TURNTABLE.md).

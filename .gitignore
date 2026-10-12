@@ -2,3 +2,17 @@ node_modules/
 .DS_Store
 npm-debug.log*
 out/
+
+# Private AI jobs must stay outside this repository
+Pazos_AI_Turntable/
+queue/
+processing/
+output/
+logs/
+__pycache__/
+*.pyc
+.env
+.env.*
+worker-status.json
+artwork.png
+view_*.png

@@ -34,7 +34,7 @@ function renderLocalState(state){
 function refreshLocal(){
   fetch("version.json",{cache:"no-store"}).then(function(r){return r.json();}).then(function(v){
     localVersion=v.version;$("localVersion").textContent=v.version;updateComparison();
-  }).catch(function(){$("localVersion").textContent="0.9.0";localVersion="0.9.0";});
+  }).catch(function(){$("localVersion").textContent="0.10.0";localVersion="0.10.0";});
   evalAI("getToolsManagerState()",function(r){
     try{renderLocalState(JSON.parse(r));}catch(e){$("modules").textContent="No se pudo comprobar instalación local";}
   });
@@ -73,6 +73,7 @@ function checkGitHub(){
 $("check").onclick=checkGitHub;
 $("repo").onclick=function(){openURL("https://github.com/"+REPO);};
 $("actions").onclick=function(){openURL("https://github.com/"+REPO+"/actions");};
+$("downloadSuite").onclick=function(){openURL("https://github.com/"+REPO+"/actions/workflows/package-suite.yml");setStatus("Abre una ejecución verde, descarga Artifacts y extrae la suite. Doble clic en Instalar-Pazos-Tools.cmd.");};
 $("update").onclick=function(){
   if(!confirm("Se ejecutará git pull y se reinstalará Pazos Vector Tools. Guarda tu trabajo antes de continuar. ¿Actualizar?"))return;
   setStatus("Actualizando desde GitHub…");
@@ -81,5 +82,20 @@ $("update").onclick=function(){
     if(String(r).indexOf("OK")===0){$("updateState").textContent="Actualizada · reinicia Illustrator";}
   });
 };
-refreshLocal();
+function refreshAI(){
+  try {
+    var path=require('path');
+    var bridge=require(path.join(process.env.APPDATA,'Adobe','CEP','extensions','com.ddepazos.aiturntable','js','bridge.cjs'));
+    var s=bridge.status(),w=s.worker;
+    $("aiVersion").textContent="v0.1.0";
+    $("aiState").textContent="Drive: "+(s.drive?"carpeta accesible":"sin configurar / no accesible")+
+      " | Colab/worker: "+(s.alive?w.runtime+" activo":"sin señal reciente")+
+      " | GPU: "+(w?(w.gpu||"no disponible"):"sin datos")+
+      " | Cola: "+(s.queued||0)+" | "+(s.progress?s.progress.state+" "+s.progress.completed+"/"+s.progress.total:"sin trabajo")+
+      " | Adaptador de prueba (CPU)";
+  } catch(e) { $("aiState").textContent="AI Turntable no instalado o no disponible: "+e.message; }
+}
+$("aiRefresh").onclick=refreshAI;
+function pollAI(){if(!document.hidden)refreshAI();setTimeout(pollAI,10000);}
+refreshLocal();refreshAI();setTimeout(pollAI,10000);
 })();

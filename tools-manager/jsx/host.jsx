@@ -27,7 +27,8 @@ function getToolsManagerState(){
             ["Image → Web","com.ddepazos.imagetoweb"],
             ["NFT Publisher","com.ddepazos.nftpublisher"],
             ["Tools Manager","com.ddepazos.toolsmanager"],
-            ["Turntable Local","com.ddepazos.turntablelocal"]
+            ["Turntable Local","com.ddepazos.turntablelocal"],
+            ["AI Turntable","com.ddepazos.aiturntable"]
         ];
         var mods=[],i;
         for(i=0;i<defs.length;i++){

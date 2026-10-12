@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ExtensionManifest Version="7.0"
+ ExtensionBundleId="com.ddepazos.aiturntable"
+ ExtensionBundleVersion="0.1.0">
+  <ExtensionList><Extension Id="com.ddepazos.aiturntable.panel" Version="0.1.0"/></ExtensionList>
+  <ExecutionEnvironment>
+    <HostList><Host Name="ILST" Version="[27.0,28.0)"/></HostList>
+    <LocaleList><Locale Code="All"/></LocaleList>
+    <RequiredRuntimeList><RequiredRuntime Name="CSXS" Version="11.0"/></RequiredRuntimeList>
+  </ExecutionEnvironment>
+  <DispatchInfoList>
+    <Extension Id="com.ddepazos.aiturntable.panel">
+      <DispatchInfo>
+        <Resources><MainPath>./index.html</MainPath><ScriptPath>./jsx/host.jsx</ScriptPath><CEFCommandLine><Parameter>--enable-nodejs</Parameter><Parameter>--mixed-context</Parameter></CEFCommandLine></Resources>
+        <Lifecycle><AutoVisible>true</AutoVisible></Lifecycle>
+        <UI>
+          <Type>Panel</Type><Menu>Pazos AI Turntable</Menu>
+          <Geometry>
+            <Size><Width>450</Width><Height>760</Height></Size>
+            <MinSize><Width>350</Width><Height>560</Height></MinSize>
+            <MaxSize><Width>1000</Width><Height>1200</Height></MaxSize>
+          </Geometry>
+        </UI>
+      </DispatchInfo>
+    </Extension>
+  </DispatchInfoList>
+</ExtensionManifest>

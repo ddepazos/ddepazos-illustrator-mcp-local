@@ -1,0 +1,30 @@
+'use strict';
+const fs=require('fs'), os=require('os'), path=require('path'), assert=require('assert'), crypto=require('crypto');
+const root=fs.mkdtempSync(path.join(os.tmpdir(),'pazos-bridge-test-'));
+process.env.APPDATA=path.join(root,'settings');
+const bridge=require('../ai-turntable-bridge/js/bridge.cjs');
+try {
+  const repo=path.join(root,'repo'); fs.mkdirSync(path.join(repo,'.git'),{recursive:true});
+  assert.throws(()=>bridge.configure(path.join(repo,'private')),/repositorio/);
+  bridge.configure(path.join(root,'Drive'));
+  const p=bridge.prepare({views:2,size:128,tilt:0});
+  assert(!fs.existsSync(path.join(p.dir,'job.json')));
+  assert.throws(()=>bridge.publish(p),/artwork/);
+  fs.writeFileSync(path.join(p.dir,'artwork.png'),Buffer.from('test image'));
+  bridge.publish(p);
+  assert.equal(bridge.status().queued,1);
+  assert.equal(bridge.status().alive,false);
+  const output=path.join(root,'Drive','output',p.job.job_id);fs.mkdirSync(output);
+  const bytes=Buffer.from('result');
+  const manifest={job_id:p.job.job_id,state:'done',views:[{file:'view_000.png',sha256:crypto.createHash('sha256').update(bytes).digest('hex')}]};
+  fs.writeFileSync(path.join(output,'manifest.json'),JSON.stringify(manifest));
+  assert.throws(()=>bridge.importFiles(),/sincronizando/);
+  fs.writeFileSync(path.join(output,'view_000.png'),bytes);
+  assert.equal(bridge.importFiles().length,1);
+  fs.writeFileSync(path.join(output,'view_000.png'),'incomplete');
+  assert.throws(()=>bridge.importFiles(),/integridad/);
+  manifest.views[0].file='../escape.png';
+  fs.writeFileSync(path.join(output,'manifest.json'),JSON.stringify(manifest));
+  assert.throws(()=>bridge.importFiles(),/inválido/);
+  console.log('Bridge privacy, publish marker, sync and import integrity: OK');
+} finally { fs.rmSync(root,{recursive:true,force:true}); }

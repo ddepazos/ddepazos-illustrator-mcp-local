@@ -1,6 +1,6 @@
 {
   "suite": "Pazos Vector Tools",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "illustrator": "2023",
   "updated": "2026-10-11",
   "modules": [
@@ -9,9 +9,13 @@
     "Pazos Tattoo Stencil",
     "Pazos Organic Shape Lab",
     "Pazos Pattern Lab",
-    "Pazos Image → Web",
+    "Pazos Image â†’ Web",
     "Pazos NFT Publisher",
     "Pazos Tools Manager",
-    "Pazos Turntable Local"
-  ]
+    "Pazos Turntable Local",
+    "Pazos AI Turntable"
+  ],
+  "module_versions": {
+    "ai-turntable-bridge": "0.1.0"
+  }
 }

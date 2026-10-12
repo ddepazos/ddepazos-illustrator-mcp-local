@@ -13,12 +13,22 @@ on:
       - "nft-publisher/**"
       - "nft-contract/**"
       - "tools-manager/**"
+      - "ai-turntable-bridge/**"
+      - "ai-worker/**"
+      - "colab/**"
+      - "tests/**"
+      - "AI_TURNTABLE.md"
       - "turntable-local/**"
       - "turntable-render/**"
       - "suite-version.json"
       - "install-*.ps1"
+      - "Instalar-Pazos-Tools.cmd"
       - ".github/workflows/package-suite.yml"
+  pull_request:
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   package:
@@ -27,9 +37,27 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Validate AI Turntable
+        run: |
+          python -m pip install -r ai-worker/requirements.txt nbformat
+          python -m compileall -q ai-worker
+          python tests/validate_ai.py
+          python -m unittest discover -s tests -p 'test_*.py'
+          node --check ai-turntable-bridge/js/main.js
+          node --check ai-turntable-bridge/js/bridge.cjs
+          node --check tools-manager/js/main.js
+          node tests/test-bridge.cjs
+
       - name: Create packages
         run: |
           mkdir -p dist
+          zip -r dist/ai-turntable-bridge.zip ai-turntable-bridge ai-worker colab AI_TURNTABLE.md install-ai-turntable.ps1 -x "*/__pycache__/*"
           zip -r dist/vector-3d-local.zip cep-plugin
           zip -r dist/halftone-pro.zip halftone-pro
           zip -r dist/tattoo-stencil.zip tattoo-stencil
@@ -40,10 +68,10 @@ jobs:
           zip -r dist/tools-manager.zip tools-manager TOOLS_MANAGER.md suite-version.json
           zip -r dist/turntable-local.zip turntable-local TURNTABLE_LOCAL.md turntable-render
           zip -r dist/pazos-vector-tools-suite.zip \
-            cep-plugin halftone-pro tattoo-stencil organic-shape-lab pattern-lab image-to-web nft-publisher nft-contract tools-manager turntable-local turntable-render \
+            cep-plugin halftone-pro tattoo-stencil organic-shape-lab pattern-lab image-to-web nft-publisher nft-contract tools-manager turntable-local turntable-render ai-turntable-bridge ai-worker colab \
             install-panel.ps1 install-halftone-pro.ps1 install-tattoo-stencil.ps1 install-organic-shape-lab.ps1 \
-            install-pattern-lab.ps1 install-image-to-web.ps1 install-nft-publisher.ps1 install-tools-manager.ps1 install-turntable-local.ps1 install-all-panels.ps1 \
-            CEP_PANEL.md HALFTONE_PRO.md TATTOO_STENCIL.md ORGANIC_SHAPE_LAB.md PATTERN_LAB.md IMAGE_TO_WEB.md NFT_PUBLISHER.md TOOLS_MANAGER.md TURNTABLE_LOCAL.md suite-version.json README.md
+            install-pattern-lab.ps1 install-image-to-web.ps1 install-nft-publisher.ps1 install-tools-manager.ps1 install-turntable-local.ps1 install-ai-turntable.ps1 install-all-panels.ps1 Instalar-Pazos-Tools.cmd \
+            CEP_PANEL.md HALFTONE_PRO.md TATTOO_STENCIL.md ORGANIC_SHAPE_LAB.md PATTERN_LAB.md IMAGE_TO_WEB.md NFT_PUBLISHER.md TOOLS_MANAGER.md TURNTABLE_LOCAL.md AI_TURNTABLE.md suite-version.json README.md -x "*/__pycache__/*"
 
       - name: Validate Turntable renderer
         run: |
