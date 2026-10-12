@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "source": "source.svg",
+  "views": 12,
+  "startAngle": -180,
+  "endAngle": 180,
+  "tilt": 10,
+  "depth": 50,
+  "perspective": 900,
+  "renderer": "pazos-turntable-2.5d"
+}
