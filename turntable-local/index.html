@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'none'; object-src 'none'; frame-src 'none';">
+<title>Pazos Turntable Local</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header><div><h1>Turntable Local</h1><small>2.5D · VECTOR · LOW RESOURCE</small></div><button id="reset">Reset</button></header>
+<section class="preview"><canvas id="preview" width="720" height="420"></canvas><div class="hint">Preview simplificado · se actualiza al soltar el control</div></section>
+<section class="actions">
+<button id="read" class="primary">Leer selección</button><button id="insert">Insertar vista</button>
+<button id="allViews">Colocar todas</button><button id="githubJob">Preparar GitHub Job</button>
+</section>
+<section class="controls">
+<div class="control"><label>Giro <b id="angleV">0°</b></label><input id="angle" type="range" min="-180" max="180" step="5" value="0"></div>
+<div class="control"><label>Inclinación <b id="tiltV">0°</b></label><input id="tilt" type="range" min="-30" max="30" step="5" value="0"></div>
+<div class="control"><label>Profundidad <b id="depthV">50</b></label><input id="depth" type="range" min="0" max="160" value="50"></div>
+<div class="control"><label>Perspectiva <b id="perspectiveV">900</b></label><input id="perspective" type="range" min="300" max="1800" step="50" value="900"></div>
+<div class="control"><label>Vistas <b id="viewsV">12</b></label><input id="views" type="range" min="4" max="16" value="12"></div>
+<div class="row"><label><input id="autoDepth" type="checkbox" checked> Auto depth</label><label><input id="keepOriginal" type="checkbox" checked> Conservar original</label></div>
+<div class="note">Auto depth usa el orden de apilado/grupos como profundidad aproximada. No inventa zonas ocultas como Firefly; produce una rotación 2.5D editable.</div>
+</section>
+<section class="github"><h2>GitHub render</h2><p>Genera <code>source.svg</code> + <code>turntable-job.json</code>. Si decides subirlos al repositorio, GitHub Actions crea la secuencia completa fuera de tu PC.</p></section>
+<footer><span id="status">Selecciona una ilustración agrupada</span><span class="offline">● LOCAL</span></footer>
+<script src="js/main.js"></script>
+</body></html>
