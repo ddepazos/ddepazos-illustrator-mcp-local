@@ -13,6 +13,8 @@ on:
       - "nft-publisher/**"
       - "nft-contract/**"
       - "tools-manager/**"
+      - "turntable-local/**"
+      - "turntable-render/**"
       - "suite-version.json"
       - "install-*.ps1"
       - ".github/workflows/package-suite.yml"
@@ -36,11 +38,19 @@ jobs:
           zip -r dist/image-to-web.zip image-to-web
           zip -r dist/nft-publisher.zip nft-publisher NFT_PUBLISHER.md nft-contract
           zip -r dist/tools-manager.zip tools-manager TOOLS_MANAGER.md suite-version.json
+          zip -r dist/turntable-local.zip turntable-local TURNTABLE_LOCAL.md turntable-render
           zip -r dist/pazos-vector-tools-suite.zip \
-            cep-plugin halftone-pro tattoo-stencil organic-shape-lab pattern-lab image-to-web nft-publisher nft-contract tools-manager \
+            cep-plugin halftone-pro tattoo-stencil organic-shape-lab pattern-lab image-to-web nft-publisher nft-contract tools-manager turntable-local turntable-render \
             install-panel.ps1 install-halftone-pro.ps1 install-tattoo-stencil.ps1 install-organic-shape-lab.ps1 \
-            install-pattern-lab.ps1 install-image-to-web.ps1 install-nft-publisher.ps1 install-tools-manager.ps1 install-all-panels.ps1 \
-            CEP_PANEL.md HALFTONE_PRO.md TATTOO_STENCIL.md ORGANIC_SHAPE_LAB.md PATTERN_LAB.md IMAGE_TO_WEB.md NFT_PUBLISHER.md TOOLS_MANAGER.md suite-version.json README.md
+            install-pattern-lab.ps1 install-image-to-web.ps1 install-nft-publisher.ps1 install-tools-manager.ps1 install-turntable-local.ps1 install-all-panels.ps1 \
+            CEP_PANEL.md HALFTONE_PRO.md TATTOO_STENCIL.md ORGANIC_SHAPE_LAB.md PATTERN_LAB.md IMAGE_TO_WEB.md NFT_PUBLISHER.md TOOLS_MANAGER.md TURNTABLE_LOCAL.md suite-version.json README.md
+
+      - name: Validate Turntable renderer
+        run: |
+          rm -rf dist-turntable-test
+          node turntable-render/render.js turntable-render/test-job dist-turntable-test
+          test -f dist-turntable-test/manifest.json
+          test "$(find dist-turntable-test -name 'frame-*.svg' | wc -l)" -eq 12
 
       - name: Upload packages
         uses: actions/upload-artifact@v4
