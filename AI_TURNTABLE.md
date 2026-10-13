@@ -22,7 +22,7 @@ Illustrator 2023 es la interfaz; GitHub distribuye y valida el código; Drive in
 ## Iniciar Colab desde Illustrator
 
 1. Pulsa **Abrir notebook Colab**. Abre `colab/Pazos_AI_Turntable.ipynb` desde la rama `main` del repo.
-2. Conecta el runtime, ejecuta todas las celdas y autoriza el montaje de Drive. La ruta predeterminada es `/content/drive/MyDrive/Pazos_AI_Turntable`: debe corresponder a la carpeta elegida en Windows. El adaptador inicial necesita solo CPU. Para un futuro modelo GPU, cambia el acelerador y sus dependencias según su documentación.
+2. Conecta el runtime, ejecuta todas las celdas y autoriza el montaje de Drive. El notebook monta Drive en `/content/gdrive` con `force_remount=True`. La ruta predeterminada es `/content/gdrive/MyDrive/Pazos_AI_Turntable`: debe corresponder a la carpeta elegida en Windows. El adaptador inicial necesita solo CPU. Para un futuro modelo GPU, cambia el acelerador y sus dependencias según su documentación.
 3. Deja ejecutándose la última celda. El notebook clona/actualiza el código público, instala dependencias y procesa trabajos mientras la sesión esté viva. Solo una sesión/worker por carpeta Drive.
 4. En Illustrator, selecciona uno o más objetos, indica vistas/tilt/tamaño y pulsa **Generar Turntable IA**. No modifica el original: exporta la selección mediante un documento temporal.
 5. Observa `queued → processing → done/error`, X/Y, worker y GPU. Cuando aparezca `done`, pulsa **Importar vistas**. Se verifica la integridad de todos los PNG antes de importar; si Drive no ha terminado, espera y repite. Se embeben en una nueva capa, en grilla debajo de la mesa activa. La casilla permite una mesa por vista.
