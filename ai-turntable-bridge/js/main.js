@@ -2,7 +2,15 @@
   'use strict';
   var $ = function(id) { return document.getElementById(id); }, bridge, busy=false;
   function message(text) { $('message').textContent=text; }
-  try { bridge = require(require('path').join(window.__adobe_cep__.getSystemPath('extension'),'js','bridge.cjs')); } catch(e) { message('No se pudo iniciar CEP Node: '+e); return; }
+  try {
+    var path = require('path');
+    var extensionPath = window.__adobe_cep__.getSystemPath('extension');
+    extensionPath = decodeURI(extensionPath || '');
+    extensionPath = extensionPath.replace(/^file:(?:\/\/\/)?/i, '');
+    extensionPath = extensionPath.replace(/^[\\\/]+([A-Za-z]:[\\\/])/, '$1');
+    extensionPath = extensionPath.replace(/[\\\/]+/g, path.sep);
+    bridge = require(path.join(extensionPath,'js','bridge.cjs'));
+  } catch(e) { message('No se pudo iniciar CEP Node: '+e); return; }
   function host(fn, args, callback) {
     if (!window.__adobe_cep__) { busy=false; message('Abre este panel desde Illustrator 2023.'); return; }
     window.__adobe_cep__.evalScript(fn+'('+args.map(function(a){return JSON.stringify(a);}).join(',')+')', callback);
