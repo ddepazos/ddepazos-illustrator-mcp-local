@@ -24,14 +24,14 @@ Illustrator 2023 es la interfaz; GitHub distribuye y valida el código; Drive in
 1. Pulsa **Abrir notebook Colab**. Abre `colab/Pazos_AI_Turntable.ipynb` desde la rama `main` del repo.
 2. Conecta el runtime, ejecuta todas las celdas y autoriza el montaje de Drive. El notebook monta Drive en `/content/gdrive` con `force_remount=True`. La ruta predeterminada es `/content/gdrive/MyDrive/Pazos_AI_Turntable`: debe corresponder a la carpeta elegida en Windows. El adaptador inicial necesita solo CPU. Para un futuro modelo GPU, cambia el acelerador y sus dependencias según su documentación.
 3. Deja ejecutándose la última celda. El notebook clona/actualiza el código público, instala dependencias y procesa trabajos mientras la sesión esté viva. Solo una sesión/worker por carpeta Drive.
-4. En Illustrator, selecciona uno o más objetos, indica vistas/tilt/tamaño y pulsa **Generar Turntable IA**. No modifica el original: exporta la selección mediante un documento temporal.
+4. En Illustrator, selecciona uno o más objetos, indica vistas/tilt/tamaño y pulsa **Generar Turntable IA**. No modifica el original. Illustrator exporta primero a una carpeta temporal local bajo `%TEMP%/PazosAITurntable/<job_id>/artwork.png`; después el bridge copia el PNG de forma atómica a `queue/<job_id>/artwork.png` en Drive y publica `job.json` al final. Illustrator nunca exporta directamente a la unidad virtual de Google Drive.
 5. Observa `queued → processing → done/error`, X/Y, worker y GPU. Cuando aparezca `done`, pulsa **Importar vistas**. Se verifica la integridad de todos los PNG antes de importar; si Drive no ha terminado, espera y repite. Se embeben en una nueva capa, en grilla debajo de la mesa activa. La casilla permite una mesa por vista.
 
 Colab Free puede requerir iniciar/conectar y autorizar Drive manualmente en cada nueva sesión. No garantiza GPU, duración ni operación permanente. Google restringe workers distribuidos y usos que eluden la interfaz del notebook; esta integración experimental no garantiza que Free admita su uso continuado. Mantén el notebook como sesión interactiva; no hay keep-alive, reconexión automática ni bypass. Consulta la [FAQ oficial de Colab](https://research.google.com/colaboratory/faq.html). GitHub Actions no inicia sesiones de Colab.
 
 ## Contrato de archivos y recuperación
 
-- `queue/<job_id>/artwork.png`: selección exportada, máximo 2048 px por lado desde el panel.
+- `%TEMP%/PazosAITurntable/<job_id>/artwork.png`: staging local de corta duración para evitar errores `PARM/MRAP` al exportar directamente a Google Drive. Se elimina al publicar o fallar.\n- `queue/<job_id>/artwork.png`: copia final en Drive; se escribe antes de `job.json` y se valida con SHA-256.
 - `queue/<job_id>/job.json`: `job_id`, `views` (1–36), `tilt` (-90–90), `size` (128–2048), `mode`, `output_dir`, `state: queued`, `created_at`, `artwork_sha256`. Se publica al final, después del PNG. `output_dir` debe ser exactamente `output/<job_id>`.
 - `processing/<job_id>/job.json`: registro de claim, actualizado a `processing`, `done` o `error`. Se conserva el input en queue para evitar pérdidas al mover archivos en Drive. Un registro terminal excluye el trabajo de nuevas ejecuciones.
 - `output/<job_id>/progress.json`: estado, `completed`, `total`, hora y posible error.
@@ -63,4 +63,4 @@ python -m unittest discover -s tests -p "test_*.py"
 node tests/test-bridge.cjs
 ```
 
-Prueba manual en Illustrator requerida: exportar grupo y selección múltiple, comprobar transparencia/límites, simular Drive pausado, iniciar/detener Colab, importar grilla con/sin mesas y comprobar que el documento original no cambió. La automatización sintáctica no sustituye esta prueba con Adobe ni una sesión real de Colab/Drive.
+Prueba manual en Illustrator requerida: exportar grupo y selección múltiple, comprobar transparencia/límites, confirmar que el PNG se crea primero en `%TEMP%` y luego aparece en Drive, simular Drive pausado, iniciar/detener Colab, importar grilla con/sin mesas y comprobar que el documento original no cambió. La automatización sintáctica no sustituye esta prueba con Adobe ni una sesión real de Colab/Drive.
