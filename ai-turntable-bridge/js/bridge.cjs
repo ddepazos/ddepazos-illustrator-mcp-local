@@ -6,6 +6,8 @@ const os = require('os');
 const crypto = require('crypto');
 const configPath = path.join(process.env.APPDATA || os.homedir(), 'Pazos', 'ai-turntable.json');
 const idPattern = /^job_[A-Za-z0-9_-]{1,100}$/;
+const tempBase = path.join(os.tmpdir(), 'PazosAITurntable');
+
 function read(file) {
   try {
     if (fs.statSync(file).size > 65536) return null;
@@ -17,6 +19,17 @@ function write(file, value) {
   const tmp = file + '.tmp';
   fs.writeFileSync(tmp, JSON.stringify(value, null, 2), 'utf8');
   fs.renameSync(tmp, file);
+}
+function removeTree(dir) {
+  try {
+    if (!fs.existsSync(dir)) return;
+    fs.readdirSync(dir).forEach(name => {
+      const item=path.join(dir,name), stat=fs.lstatSync(item);
+      if (stat.isDirectory() && !stat.isSymbolicLink()) removeTree(item);
+      else fs.unlinkSync(item);
+    });
+    fs.rmdirSync(dir);
+  } catch (_) {}
 }
 function config() { return read(configPath) || {}; }
 function configure(root) {
@@ -36,25 +49,82 @@ function jobPath(root, area, id) {
   if (!idPattern.test(id)) throw Error('job_id inválido');
   return path.join(root,area,id);
 }
+function validatePrepared(prepared) {
+  const cfg=config();
+  if (!prepared || !prepared.job || !idPattern.test(prepared.job.job_id)) throw Error('Trabajo temporal inválido.');
+  if (!cfg.root) throw Error('Drive sin configurar.');
+  const expectedDrive=jobPath(cfg.root,'queue',prepared.job.job_id);
+  const expectedTemp=path.join(tempBase,prepared.job.job_id);
+  if (path.resolve(prepared.dir)!==path.resolve(expectedDrive) ||
+      path.resolve(prepared.tempDir)!==path.resolve(expectedTemp) ||
+      path.resolve(prepared.tempArtwork)!==path.resolve(path.join(expectedTemp,'artwork.png'))) {
+    throw Error('Rutas del trabajo temporal inválidas.');
+  }
+  return {cfg,expectedDrive,expectedTemp};
+}
 function prepare(params) {
   const cfg = config();
   if (!cfg.root) throw Error('Configura primero la carpeta local de Drive.');
   if (!Number.isInteger(params.views) || params.views < 1 || params.views > 36 ||
       !Number.isInteger(params.size) || params.size < 128 || params.size > 2048 ||
       !Number.isFinite(params.tilt) || Math.abs(params.tilt) > 90) throw Error('Parámetros inválidos');
+
   const id = 'job_' + Date.now() + '_' + crypto.randomBytes(6).toString('hex');
-  const dir = jobPath(cfg.root, 'queue', id);
-  fs.mkdirSync(dir);
-  return {dir:dir, job:{job_id:id, views:params.views, tilt:params.tilt, size:params.size,
-    mode:'test-preview', output_dir:'output/'+id, state:'queued', created_at:Date.now()/1000}};
+  const driveDir = jobPath(cfg.root, 'queue', id);
+  const tempDir = path.join(tempBase,id);
+  fs.mkdirSync(tempDir,{recursive:true});
+
+  return {
+    dir:driveDir,
+    tempDir:tempDir,
+    tempArtwork:path.join(tempDir,'artwork.png'),
+    job:{
+      job_id:id, views:params.views, tilt:params.tilt, size:params.size,
+      mode:'test-preview', output_dir:'output/'+id, state:'queued', created_at:Date.now()/1000
+    }
+  };
+}
+function abort(prepared) {
+  try {
+    const v=validatePrepared(prepared);
+    removeTree(v.expectedTemp);
+    if (fs.existsSync(v.expectedDrive) && !fs.existsSync(path.join(v.expectedDrive,'job.json'))) removeTree(v.expectedDrive);
+  } catch (_) {}
+  return true;
 }
 function publish(prepared) {
-  const artwork = path.join(prepared.dir,'artwork.png');
-  if (!fs.existsSync(artwork) || fs.statSync(artwork).size === 0) throw Error('Falta artwork.png');
-  prepared.job.artwork_sha256 = crypto.createHash('sha256').update(fs.readFileSync(artwork)).digest('hex');
-  write(path.join(prepared.dir,'job.json'), prepared.job); // publish marker LAST
-  write(configPath, Object.assign(config(), {lastJob:prepared.job.job_id}));
-  return prepared.job.job_id;
+  const v=validatePrepared(prepared);
+  const local=prepared.tempArtwork;
+  if (!fs.existsSync(local) || fs.statSync(local).size===0) {
+    abort(prepared);
+    throw Error('Exportación local: falta artwork.png temporal.');
+  }
+  if (fs.statSync(local).size > 32*1024*1024) {
+    abort(prepared);
+    throw Error('Exportación local: artwork.png supera 32 MB.');
+  }
+
+  let partial=null;
+  try {
+    if (fs.existsSync(v.expectedDrive)) throw Error('Ya existe una carpeta con el mismo job_id en Drive.');
+    fs.mkdirSync(v.expectedDrive);
+    partial=path.join(v.expectedDrive,'artwork.png.partial');
+    const artwork=path.join(v.expectedDrive,'artwork.png');
+
+    fs.copyFileSync(local,partial);
+    fs.renameSync(partial,artwork);
+
+    prepared.job.artwork_sha256=crypto.createHash('sha256').update(fs.readFileSync(artwork)).digest('hex');
+    write(path.join(v.expectedDrive,'job.json'),prepared.job); // publish marker LAST
+    write(configPath,Object.assign(config(),{lastJob:prepared.job.job_id}));
+    removeTree(v.expectedTemp);
+    return prepared.job.job_id;
+  } catch(e) {
+    try { if (partial && fs.existsSync(partial)) fs.unlinkSync(partial); } catch (_) {}
+    if (fs.existsSync(v.expectedDrive) && !fs.existsSync(path.join(v.expectedDrive,'job.json'))) removeTree(v.expectedDrive);
+    removeTree(v.expectedTemp);
+    throw Error('Copia a Drive: '+e.message);
+  }
 }
 function status() {
   const cfg = config(), root = cfg.root;
@@ -87,4 +157,4 @@ function importFiles() {
     return file;
   });
 }
-module.exports = {config, configure, prepare, publish, status, importFiles};
+module.exports = {config, configure, prepare, abort, publish, status, importFiles};
