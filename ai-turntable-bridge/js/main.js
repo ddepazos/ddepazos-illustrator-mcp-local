@@ -33,18 +33,33 @@
   };
   $('generate').onclick=function() {
     if (busy) return;
+    var prepared=null;
     try {
-      var prepared=bridge.prepare({views:Number($('views').value),tilt:Number($('tilt').value),size:Number($('size').value)});
-      busy=true; $('generate').disabled=true; message('Exportando selección…');
-      host('pazosAIExport', [prepared.dir.replace(/\\/g,'/')+'/artwork.png',prepared.job.size], function(result) {
+      prepared=bridge.prepare({views:Number($('views').value),tilt:Number($('tilt').value),size:Number($('size').value)});
+      busy=true; $('generate').disabled=true;
+      message('Exportando selección a carpeta temporal local…');
+
+      host('pazosAIExport', [prepared.tempArtwork.replace(/\\/g,'/'),prepared.job.size], function(result) {
         busy=false; $('generate').disabled=false;
         try {
-          if (result!=='OK') throw Error(result);
-          bridge.publish(prepared); message('En cola. Colab procesará el trabajo cuando Drive termine de sincronizar.');
-        } catch(e) { message(String(e)); }
+          if (result!=='OK') {
+            bridge.abort(prepared);
+            throw Error('Exportación local: '+String(result).replace(/^ERROR:\s*/,''));
+          }
+          message('PNG local listo. Copiando a Google Drive…');
+          bridge.publish(prepared);
+          message('En cola. PNG copiado a Drive y job.json publicado; Colab lo procesará al sincronizar.');
+        } catch(e) {
+          try { if (prepared) bridge.abort(prepared); } catch(ignore) {}
+          message(String(e));
+        }
         refresh();
       });
-    } catch(e) { busy=false; $('generate').disabled=false; message(String(e)); }
+    } catch(e) {
+      busy=false; $('generate').disabled=false;
+      try { if (prepared) bridge.abort(prepared); } catch(ignore) {}
+      message(String(e));
+    }
   };
   $('import').onclick=function() {
     try {
