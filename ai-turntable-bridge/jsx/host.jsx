@@ -4,31 +4,90 @@ function pazosAIChooseFolder() {
     if (!folder) return "null";
     return '"' + folder.fsName.replace(/\\/g,"\\\\").replace(/"/g,'\\"') + '"';
 }
+
 function pazosAIExport(destination, size) {
     var temp = null, source = null;
     try {
         if (!app.documents.length) throw new Error("Abre un documento y selecciona la ilustración.");
         source = app.activeDocument;
-        var selection = source.selection, items = [], i;
+        var selection = source.selection;
         if (!selection || !selection.length) throw new Error("Selecciona uno o más objetos.");
-        for (i=0; i<selection.length; i++) items.push(selection[i]);
+
+        var out = new File(destination);
+        if (!out.parent.exists) throw new Error("La carpeta temporal local no existe: " + out.parent.fsName);
+
+        /*
+         * Ruta principal: Illustrator 2023 exporta SOLO la selección a un PNG local.
+         * No escribimos directamente en Google Drive para evitar errores PARM/MRAP.
+         * El tamaño solicitado se aplica después en el worker; aquí prima la estabilidad.
+         */
+        try {
+            if (source.exportSelectionAsPNG) {
+                source.exportSelectionAsPNG(out);
+                if (out.exists && out.length > 0) return "OK";
+            }
+        } catch(primaryError) {
+            // Fallback compatible con Illustrator 2023: clipboard -> documento temporal local.
+        }
+
+        /*
+         * Fallback: copy/paste en vez de duplicate() entre documentos.
+         * duplicate() entre documentos es una fuente frecuente de PARM en Illustrator.
+         */
+        source.activate();
+        app.executeMenuCommand("copy");
+
         temp = app.documents.add(DocumentColorSpace.RGB);
-        var group = temp.groupItems.add();
-        for (i=0; i<items.length; i++) items[i].duplicate(group, ElementPlacement.PLACEATEND);
-        var b = group.visibleBounds, width=b[2]-b[0], height=b[1]-b[3];
-        if (width<=0 || height<=0) throw new Error("La selección no tiene área visible.");
-        temp.artboards[0].artboardRect=b;
-        var opts=new ExportOptionsPNG24();
-        opts.transparency=true; opts.antiAliasing=true; opts.artBoardClipping=true;
-        opts.horizontalScale=opts.verticalScale=(size/Math.max(width,height))*100;
-        temp.exportFile(new File(destination), ExportType.PNG24, opts);
-        temp.close(SaveOptions.DONOTSAVECHANGES); temp=null; source.activate();
+        temp.activate();
+        app.executeMenuCommand("paste");
+
+        var pasted = temp.selection;
+        if (!pasted || !pasted.length) throw new Error("No se pudo copiar la selección al documento temporal.");
+
+        var i, b, left, top, right, bottom;
+        b = pasted[0].visibleBounds;
+        left=b[0]; top=b[1]; right=b[2]; bottom=b[3];
+
+        for (i=1; i<pasted.length; i++) {
+            b = pasted[i].visibleBounds;
+            if (b[0] < left) left = b[0];
+            if (b[1] > top) top = b[1];
+            if (b[2] > right) right = b[2];
+            if (b[3] < bottom) bottom = b[3];
+        }
+
+        var width = right-left, height = top-bottom;
+        if (width <= 0 || height <= 0) throw new Error("La selección no tiene área visible.");
+
+        temp.artboards[0].artboardRect = [left, top, right, bottom];
+
+        var opts = new ExportOptionsPNG24();
+        opts.transparency = true;
+        opts.antiAliasing = true;
+        opts.artBoardClipping = true;
+
+        var scale = (size / Math.max(width,height)) * 100;
+        if (scale < 10) scale = 10;
+        if (scale > 5000) scale = 5000;
+        opts.horizontalScale = scale;
+        opts.verticalScale = scale;
+
+        temp.exportFile(out, ExportType.PNG24, opts);
+        temp.close(SaveOptions.DONOTSAVECHANGES);
+        temp = null;
+        source.activate();
+
+        if (!out.exists || out.length <= 0) throw new Error("Illustrator no generó artwork.png en la carpeta temporal.");
         return "OK";
     } catch(e) {
-        try { if(temp) temp.close(SaveOptions.DONOTSAVECHANGES); if(source) source.activate(); } catch(ignore) {}
-        return "ERROR: "+e;
+        try {
+            if (temp) temp.close(SaveOptions.DONOTSAVECHANGES);
+            if (source) source.activate();
+        } catch(ignore) {}
+        return "ERROR: " + e;
     }
 }
+
 function pazosAIImport(files, separateArtboards) {
     var doc=null, added=[], boards=[], layer=null;
     try {
